@@ -10,7 +10,7 @@
 			<div class="detector-frame"></div>
 		</div>
 
-		<div class="mb-5" v-if="barcodeValue">
+		<div class="mb-5">
 			<p class="aligm-items-center justify-content">
 				<img class="top-ajustment me-2" src="@/assets/icons/barcode.png" width="30">
 				<strong>{{ barcodeValue }}</strong>
@@ -22,6 +22,14 @@
 			</p>
 		</div>
 
+		<div>
+			<div class="form-floating mb-3">
+				<input v-model="barcodeValue" type="text" class="form-control" id="barcode"
+					placeholder="Código de Barras">
+				<label for="barcode">Código de Barras</label>
+			</div>
+		</div>
+
 		<div class="bg-box btn-rounded p-3">
 			<div v-if="product && Object.keys(product).length" class="row p-0 g-2">
 				<div class="row g-2 align-items-center">
@@ -31,23 +39,20 @@
 					</div>
 					<div class="col-9">
 						<h5 class="text-start">
-							{{ product.description?.slice(0, 60) }}
-							<span v-if="product.description?.length > 60">...</span>
+							{{ product.description }}
 						</h5>
 					</div>
 				</div>
 
 				<div class="col">
-					<div class="form-floating mb-3">
-						<input v-model="form.price" type="text" class="form-control" id="price" placeholder="Preço">
-						<label for="price">Preço</label>
+					<div class="input-group mb-3">
+						<span class="input-group-text">R$</span>
+						<input v-model="priceTemp" @input="formatPrice" type="text" class="form-control">
 					</div>
 				</div>
 				<div class="col">
-					<div class="form-floating mb-3">
-						<input v-model="form.quantity" type="number" class="form-control" id="quantity"
-							placeholder="Password">
-						<label for="quantity">Quantidade</label>
+					<div class="mb-3">
+						<input v-model="form.quantity" type="number" class="form-control" id="" placeholder="Quantidade">
 					</div>
 				</div>
 
@@ -62,7 +67,7 @@
 			{{ errorMessage }}
 		</pre>
 
-		<Toast v-if="showToast" :message="toastMessage" :type="'danger'" @close="showToast = false" />
+		<Toast v-if="showToast" :message="toastMessage" :type="'success'" @close="showToast = false" />
 	</div>
 
 	<div>
@@ -85,13 +90,15 @@ export default {
 			statusMessage: 'Iniciando...',
 			errorMessage: '',
 			barcodeValue: '',
+			barcodeTemp: '',
 			product: [],
 			codeReader: null,
 			toastMessage: '',
 			showToast: false,
+			priceTemp: '',
 			form: {
-				quantity: 0,
-				price: 0.00,
+				quantity: 1,
+				price: '',
 				product_id: null
 			}
 		};
@@ -166,6 +173,9 @@ export default {
 					return;
 				}
 
+				const numericPrice = this.priceTemp.replace(/\./g, '').replace(',', '.');
+				this.form.price = parseFloat(numericPrice);
+
 				await api.post(`/users/1/cart/items`, this.form);
 				this.toastMessage = 'Produto adicionado no carrinho!';
 				this.showToast = true;
@@ -173,6 +183,15 @@ export default {
 				this.toastMessage = `Erro ao salvar: ${error.message}`;
 				this.showToast = true;
 			}
+		},
+		formatPrice(event) {
+			let value = event.target.value.replace(/\D/g, '');
+			value = (parseInt(value, 10) / 100).toFixed(2);
+			const formatted = value
+				.replace('.', ',')
+				.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+			this.priceTemp = formatted;
 		}
 	}
 };
