@@ -1,33 +1,68 @@
 <!-- src/components/BarcodeScanner.vue -->
 <template>
 	<div class="container text-center">
-		<p>{{ statusMessage }}</p>
+		<div class="alert alert-success" role="alert">
+			{{ statusMessage }}
+		</div>
 
 		<div class="video-container mb-3">
 			<video ref="video" autoplay playsinline />
 			<div class="detector-frame"></div>
 		</div>
-		
-		<p v-if="barcodeValue">
-			<img class="top-ajustment" src="@/assets/icons/barcode.png" width="30"> <strong>{{ barcodeValue }}</strong>
-		</p>
 
-		<p>
-			<button v-if="barcodeValue" @click="searchProduct()" class="btn btn-primary">
-				<img class="me-2 top-ajustment" src="@/assets/icons/search-white.png" width="20">Consultar Produto
-			</button>
-		</p>
+		<div class="mb-5" v-if="barcodeValue">
+			<p class="aligm-items-center justify-content">
+				<img class="top-ajustment me-2" src="@/assets/icons/barcode.png" width="30">
+				<strong>{{ barcodeValue }}</strong>
+
+				<button @click="searchProduct()" class="btn btn-primary ms-5">
+					<img class="me-2 top-ajustment" src="@/assets/icons/search-white.png" width="20">
+					Consultar Produto
+				</button>
+			</p>
+		</div>
+
+		<div class="bg-box btn-rounded p-3">
+			<div v-if="product && Object.keys(product).length" class="row p-0 g-2">
+				<div class="row g-2 align-items-center">
+					<div class="col-3">
+						<img :src="product.image || 'https://i.ibb.co/fYw4g7L/no-image.jpg'" alt="Produto"
+							class="img-fluid rounded" />
+					</div>
+					<div class="col-9">
+						<h5 class="text-start">
+							{{ product.description?.slice(0, 60) }}
+							<span v-if="product.description?.length > 60">...</span>
+						</h5>
+					</div>
+				</div>
+
+				<div class="col">
+					<div class="form-floating mb-3">
+						<input v-model="form.price" type="text" class="form-control" id="price" placeholder="Preço">
+						<label for="price">Preço</label>
+					</div>
+				</div>
+				<div class="col">
+					<div class="form-floating mb-3">
+						<input v-model="form.quantity" type="number" class="form-control" id="quantity"
+							placeholder="Password">
+						<label for="quantity">Quantidade</label>
+					</div>
+				</div>
+
+				<button @click="save()" class="btn btn-primary btn-rounded">
+					<img :src="addToCartIcon" width="24" alt="">
+					Adicionar Produto
+				</button>
+			</div>
+		</div>
 
 		<pre v-if="errorMessage" style="color: red; white-space: pre-wrap;">
 			{{ errorMessage }}
 		</pre>
 
-		<Toast
-            v-if="showToast"
-            :message="toastMessage"
-            :type="'danger'"
-            @close="showToast = false"
-        />
+		<Toast v-if="showToast" :message="toastMessage" :type="'danger'" @close="showToast = false" />
 	</div>
 
 	<div>
@@ -39,6 +74,7 @@
 
 <script>
 import { BarcodeFormat, BrowserMultiFormatReader } from '@zxing/browser';
+import addToCartIcon from '../assets/icons/add-to-cart.png';
 import api from '../services/axios';
 import Toast from './Toast.vue';
 
@@ -52,7 +88,12 @@ export default {
 			product: [],
 			codeReader: null,
 			toastMessage: '',
-            showToast: false
+			showToast: false,
+			form: {
+				quantity: 0,
+				price: 0.00,
+				product_id: null
+			}
 		};
 	},
 	components: {
@@ -99,17 +140,37 @@ export default {
 			this.codeReader = new BrowserMultiFormatReader();
 			this.codeReader.decodeFromVideoDevice(null, this.video, (result, err) => {
 				if (result) {
-					this.barcodeValue = result.getText();
-					this.statusMessage = 'Código detectado!';
+					const code = result.getText();
+					if (this.barcodeValue !== code) {
+						this.barcodeValue = code;
+						this.statusMessage = 'Código detectado!';
+					}
 				}
 			});
 		},
 		async searchProduct() {
 			try {
 				const response = await api.post(`/products/scan?gtin=${this.barcodeValue}`);
-				this.product = response.data;
+				this.product = response.data.product;
+				this.form.product_id = this.product.id;
 			} catch (err) {
 				this.toastMessage = 'Erro ao buscar produto: ${err.message}`';
+				this.showToast = true;
+			}
+		},
+		async save() {
+			try {
+				if (!this.form.product_id) {
+					this.toastMessage = 'Produto não encontrado.';
+					this.showToast = true;
+					return;
+				}
+
+				await api.post(`/users/1/cart/items`, this.form);
+				this.toastMessage = 'Produto adicionado no carrinho!';
+				this.showToast = true;
+			} catch (error) {
+				this.toastMessage = `Erro ao salvar: ${error.message}`;
 				this.showToast = true;
 			}
 		}

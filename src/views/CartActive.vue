@@ -30,7 +30,7 @@ export default {
     methods: {
         async getCartActive() {
             const response = await api.post(`/users/1/cart/active`);
-            this.cart = response.data;
+            this.cart = response.data.cart;
         },
     },
     mounted() {

@@ -59,8 +59,8 @@ export default {
 	methods: {
 		async searchProduct() {
 			try {
-				const response = await api.get(`/products/search?q=${this.query}`);
-				this.products = response.data;
+				const response = await api.post(`/products/search?q=${this.query}`);
+				this.products = response.data.products;
 			} catch (error) {
 				console.error('Erro ao buscar produtos:', error);
 				this.products = [];

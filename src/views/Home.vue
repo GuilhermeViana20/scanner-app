@@ -22,7 +22,7 @@
                         <div class="mt-auto">
                             <div class="fw-bold">{{ cartActive.store_name ?? 'Nenhum carrinho ativo' }}</div>
                             <div class="text-white font-small fw-bold">
-                                {{ cartActive.quantity ?? '0 produtos' }} | {{ cartActive.total ?? 'R$ 0,00' }}
+                                {{ cartActive.quantity_term }} | {{ cartActive.total }}
                             </div>
                         </div>
                     </button>
@@ -78,11 +78,11 @@ export default {
     methods: {
         async getCartActive() {
             const response = await api.post('/users/1/cart/active');
-            this.cartActive = response.data;
+            this.cartActive = response.data.cart;
         },
         async getCarts() {
             const response = await api.get('/users/1/carts');
-            this.carts = response.data;
+            this.carts = response.data.carts;
         },
         goToActiveCart() {
             if (!this.cartActive || Object.keys(this.cartActive).length === 0) {
