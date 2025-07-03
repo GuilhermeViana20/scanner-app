@@ -97,7 +97,7 @@ export default {
         },
         async getCart(cartId) {
             const response = await api.get(`/users/1/cart/${cartId}`);
-            this.cart = response.data;
+            this.cart = response.data.cart;
         },
     },
     mounted() {

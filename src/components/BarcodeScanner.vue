@@ -34,8 +34,11 @@
 			<div v-if="product && Object.keys(product).length" class="row p-0 g-2">
 				<div class="row g-2 align-items-center">
 					<div class="col-3">
-						<img :src="product.image || 'https://i.ibb.co/fYw4g7L/no-image.jpg'" alt="Produto"
-							class="img-fluid rounded" />
+						<img
+							:src="product.image || 'https://i.ibb.co/fYw4g7L/no-image.jpg'"
+							alt="Produto"
+							class="img-fluid rounded"
+						/>
 					</div>
 					<div class="col-9">
 						<h5 class="text-start">
@@ -46,7 +49,13 @@
 
 				<div class="col">
 					<div class="input-group mb-3">
-						<span class="input-group-text">R$</span>
+						<span class="input-group-text">Preço R$</span>
+						<input v-model="priceTemp" @input="formatPrice" type="text" class="form-control">
+					</div>
+				</div>
+				<div class="col-6">
+					<div class="input-group mb-3">
+						<span class="input-group-text">Preço Médio R$</span>
 						<input v-model="priceTemp" @input="formatPrice" type="text" class="form-control">
 					</div>
 				</div>
