@@ -47,19 +47,19 @@
 					</div>
 				</div>
 
-				<div class="col">
+				<div class="col-5">
 					<div class="input-group mb-3">
 						<span class="input-group-text">Preço R$</span>
-						<input v-model="priceTemp" @input="formatPrice" type="text" class="form-control">
+						<input v-model="price" @input="formatPrice" type="text" class="form-control">
 					</div>
 				</div>
-				<div class="col-6">
+				<div class="col-5">
 					<div class="input-group mb-3">
-						<span class="input-group-text">Preço Médio R$</span>
-						<input v-model="priceTemp" @input="formatPrice" type="text" class="form-control">
+						<span class="input-group-text">Médio R$</span>
+						<input v-model="avg_price" @input="formatPrice" type="text" class="form-control">
 					</div>
 				</div>
-				<div class="col">
+				<div class="col-2">
 					<div class="mb-3">
 						<input v-model="form.quantity" type="number" class="form-control" id="" placeholder="Quantidade">
 					</div>
@@ -99,6 +99,8 @@ export default {
 			toastMessage: '',
 			showToast: false,
 			priceTemp: '',
+			price: '',
+			avg_price: '',
 			form: {
 				quantity: 1,
 				price: '',

@@ -3,7 +3,12 @@
 
     <CartHeader :store_name="cart.store_name" />
 
-    <CartItem :products="cart.products" />
+    <CartItem v-if="cart.products" :products="cart.products" />
+
+    <div v-else class="text-center">
+        <span class="spinner-grow spinner-grow-sm me-2" aria-hidden="true"></span>
+        <span role="status">Carregando produtos...</span>
+    </div>
 
     <CartFooter :cart="cart" />
 </template>

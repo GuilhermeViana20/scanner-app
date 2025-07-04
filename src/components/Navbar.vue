@@ -2,7 +2,7 @@
     <nav class="navbar mb-3">
         <div class="container">
             <div v-if="back" class="col-1">
-                <button v-if="back" @click="$router.back()" class="btn btn-link p-0 m-0">
+                <button @click="goBack" class="btn btn-link p-0 m-0">
                     <img class="icon-left" src="@/assets/icons/left-arrow.png" alt="">
                 </button>
             </div>
@@ -24,20 +24,27 @@ let backHandler = null;
 export default {
     name: 'Navbar',
     props: {
-        title: {
-            type: String,
-        },
+        title: String,
         back: {
             type: Boolean,
             default: false
+        }
+    },
+    methods: {
+        goBack() {
+            if (window.history.length > 1) {
+                this.$router.go(-1);
+            } else {
+                this.$router.push('/home');
+            }
         }
     },
     mounted() {
         if (window.Capacitor && window.Capacitor.getPlatform() === 'android') {
             import('@capacitor/app').then(({ App }) => {
                 backHandler = () => {
-                    if (this.back) {
-                        this.$router.back();
+                    if (this.back && window.history.length > 1) {
+                        this.$router.go(-1);
                     } else {
                         App.exitApp();
                     }

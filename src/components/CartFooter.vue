@@ -31,7 +31,6 @@ export default {
     props: {
         cart: {
             type: Array,
-            default: [],
             required: true,
         },
     }

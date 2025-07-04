@@ -4,7 +4,12 @@
 
         <CartHeader :store_name="cart.store_name" />
 
-        <CartItem :products="cart.products" />
+        <CartItem v-if="products" :products="cart.products" />
+        
+        <div v-else>
+            <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+            <span role="status">Carregando produtos...</span>
+        </div>
 
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">

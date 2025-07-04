@@ -1,8 +1,11 @@
 <template>
     <div class="container">
         <div class="title-cart w-100 align-items-center d-flex mb-3">
-            <div class="container">
+            <div v-if="store_name" class="container">
                 <h1 class="text-center mb-0">{{ store_name }}</h1>
+            </div>
+            <div v-else class="w-100 justify-content-center text-center">
+                <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
             </div>
         </div>
     </div>
@@ -15,7 +18,6 @@ export default {
     props: {
         store_name: {
             type: String,
-            default: 'Supermercado',
             required: true,
         },
     },
