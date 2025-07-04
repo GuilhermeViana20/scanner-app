@@ -22,11 +22,11 @@
 
       <div class="d-flex align-items-center justify-content-center gap-2">
         <button class="btn p-0">
-          <img src="@/assets/icons/minus-cart.png" width="18" />
+          <img @click="minus()" src="@/assets/icons/minus-cart.png" width="18" />
         </button>
         <span class="fw-semibold count">{{ product.quantity }}</span>
         <button class="btn p-0">
-          <img src="@/assets/icons/plus-cart.png" width="18" />
+          <img @click="plus()" src="@/assets/icons/plus-cart.png" width="18" />
         </button>
       </div>
     </div>
@@ -49,6 +49,14 @@ export default {
   },
   mounted() {
     console.log(this.normalizedProducts);
+  },
+  methods: {
+    plus() {
+      console.log('plus')
+    },
+    minus() {
+      console.log('minus')
+    }
   },
 };
 </script>

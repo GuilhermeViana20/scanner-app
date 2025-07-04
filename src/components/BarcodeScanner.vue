@@ -78,12 +78,6 @@
 
 		<Toast v-if="showToast" :message="toastMessage" :type="'success'" @close="showToast = false" />
 	</div>
-
-	<div>
-		<div>
-
-		</div>
-	</div>
 </template>
 
 <script>
