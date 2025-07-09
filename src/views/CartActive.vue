@@ -29,16 +29,22 @@ export default {
     },
     data() {
         return {
-            cart: []
+            cart: [],
+            user: []
         };
     },
     methods: {
         async getCartActive() {
-            const response = await api.post(`/users/1/cart/active`);
+            const response = await api.post(`/users/${this.user.id}/cart/active`);
             this.cart = response.data.cart;
+        },
+        async getUser() {
+            this.user = JSON.parse(localStorage.getItem('user'));
+            console.log(this.user);
         },
     },
     mounted() {
+        this.getUser();
         this.getCartActive();
     },
 };

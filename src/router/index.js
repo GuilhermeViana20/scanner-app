@@ -10,20 +10,31 @@ import Register from '../views/Register.vue';
 import RecoveryPassword from '../views/RecoveryPassword.vue';
 
 const routes = [
-	{ path: '/', name: 'Home', component: Home },
-	{ path: '/active', name: 'CartActive', component: CartActive },
-	{ path: '/profile', name: 'Profile', component: Profile },
-	{ path: '/scanner', name: 'Scanner', component: Scanner },
-	{ path: '/detail/:id', name: 'Detail', component: Detail },
-	{ path: '/search', name: 'Search', component: Search },
-	{ path: '/login', name: 'Login', component: Login },
-	{ path: '/register', name: 'Register', component: Register },
-	{ path: '/recovery-password', name: 'RecoveryPassword', RecoveryPassword },
+  { path: '/login', name: 'Login', component: Login, meta: { public: true } },
+  { path: '/register', name: 'Register', component: Register, meta: { public: true } },
+  { path: '/recovery-password', name: 'RecoveryPassword', component: RecoveryPassword, meta: { public: true } },
+  { path: '/', name: 'Home', component: Home },
+  { path: '/active', name: 'CartActive', component: CartActive },
+  { path: '/profile', name: 'Profile', component: Profile },
+  { path: '/scanner', name: 'Scanner', component: Scanner },
+  { path: '/detail/:id', name: 'Detail', component: Detail },
+  { path: '/search', name: 'Search', component: Search },
 ];
 
 const router = createRouter({
 	history: createWebHistory(),
 	routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const isPublic = to.meta.public;
+  const token = localStorage.getItem('token');
+
+  if (!isPublic && !token) {
+    return next('/login');
+  }
+
+  next();
 });
 
 export default router;

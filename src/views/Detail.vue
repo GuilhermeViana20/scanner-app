@@ -4,7 +4,7 @@
 
         <CartHeader :store_name="cart.store_name" />
 
-        <CartItem v-if="products" :products="cart.products" />
+        <CartItem v-if="cart" :products="cart.products" />
         
         <div v-else>
             <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
@@ -93,7 +93,8 @@ export default {
                     action: () => alert('Email')
                 }
             ],
-            cart: []
+            cart: [],
+            user: [],
         };
     },
     methods: {
@@ -101,11 +102,15 @@ export default {
             this.showOptions = !this.showOptions;
         },
         async getCart(cartId) {
-            const response = await api.get(`/users/1/cart/${cartId}`);
+            const response = await api.get(`/users/${this.user.id}/cart/${cartId}`);
             this.cart = response.data.cart;
+        },
+        async getUser() {
+            this.user = JSON.parse(localStorage.getItem('user'));
         },
     },
     mounted() {
+        this.getUser();
         const cartId = this.$route.params.id;
         this.getCart(cartId);
     },

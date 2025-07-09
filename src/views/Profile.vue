@@ -15,23 +15,17 @@
         <div class="container">
             <div class="mb-3">
                 <label for="name" class="form-label fw-bold color-gray">Nome Completo</label>
-                <input type="text" class="form-control" id="name"
-                    placeholder="Insira seu nome e sobrenome"
-                    v-model="user.name"
-                >
+                <input v-model="user.name" type="text" class="form-control" id="name" placeholder="Insira seu nome e sobrenome">
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label fw-bold color-gray">E-mail</label>
-                <input type="text" class="form-control" id="email"
-                    placeholder="Insira seu e-mail"
-                    v-model="user.email"
-                >
+                <input v-model="user.email" type="text" class="form-control" id="email" placeholder="Insira seu e-mail">
             </div>
             <div class="mb-3">
                 <label for="phone" class="form-label fw-bold color-gray">Telefone/WhatsApp</label>
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="phone">+55</span>
-                    <input v-model="user.phone" type="text" class="form-control" placeholder="Insira seu telefone" aria-describedby="phone">
+                    <input v-model="user.phone" type="text" class="form-control" placeholder="Insira seu telefone">
                 </div>
             </div>
 
@@ -39,14 +33,13 @@
                 <img class="top-ajustment me-1" src="@/assets/icons/diskette.png" width="20">
                 Atualizar usuário
             </button>
+
+            <button @click="exitUser()" class="btn btn-danger w-100 mt-5 button-edit">
+                Sair da Conta
+            </button>
         </div>
 
-        <Toast
-            v-if="showToast"
-            :message="toastMessage"
-            :type="'success'"
-            @close="showToast = false"
-        />
+        <Toast v-if="showToast" :message="toastMessage" :type="'success'" @close="showToast = false" />
     </div>
 </template>
 
@@ -69,25 +62,25 @@ export default {
         }
     },
     methods: {
-        async getUser() {
-            const response = await api.get('/users/1');
-            this.user = response.data;
-        },
         async updateUser() {
-            const response = await api.put('/users/1', this.user);
+            const response = await api.put(`/users/${this.user.id}`, this.user);
             this.user = response.data.user;
             this.toastMessage = response.data.message;
             this.showToast = true;
+            localStorage.setItem('user', JSON.stringify(this.user));
         },
         changePhoto() {
             // lógica futura para trocar foto
         },
         closeToast() {
             this.$emit('close');
-        }
+        },
+        async getUser() {
+            this.user = JSON.parse(localStorage.getItem('user'));
+        },
     },
     mounted() {
-        this.getUser()
+        this.getUser();
     },
 };
 </script>

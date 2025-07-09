@@ -34,11 +34,8 @@
 			<div v-if="product && Object.keys(product).length" class="row p-0 g-2">
 				<div class="row g-2 align-items-center">
 					<div class="col-3">
-						<img
-							:src="product.image || 'https://i.ibb.co/fYw4g7L/no-image.jpg'"
-							alt="Produto"
-							class="img-fluid rounded"
-						/>
+						<img :src="product.image || 'https://i.ibb.co/fYw4g7L/no-image.jpg'" alt="Produto"
+							class="img-fluid rounded" />
 					</div>
 					<div class="col-9">
 						<h5 class="text-start">
@@ -61,7 +58,8 @@
 				</div>
 				<div class="col-2">
 					<div class="mb-3">
-						<input v-model="form.quantity" type="number" class="form-control" id="" placeholder="Quantidade">
+						<input v-model="form.quantity" type="number" class="form-control" id=""
+							placeholder="Quantidade">
 					</div>
 				</div>
 
@@ -112,6 +110,7 @@ export default {
 		Toast
 	},
 	mounted() {
+		this.getUser();
 		this.initCamera();
 	},
 	beforeUnmount() {
@@ -181,9 +180,13 @@ export default {
 				const numericPrice = this.priceTemp.replace(/\./g, '').replace(',', '.');
 				this.form.price = parseFloat(numericPrice);
 
-				await api.post(`/users/1/cart/items`, this.form);
+				await api.post(`/users/${this.user.id}/cart/items`, this.form);
 				this.toastMessage = 'Produto adicionado no carrinho!';
 				this.showToast = true;
+
+				this.$router.push('/active').then(() => {
+					window.location.reload();
+				});
 			} catch (error) {
 				this.toastMessage = `Erro ao salvar: ${error.message}`;
 				this.showToast = true;
@@ -197,7 +200,10 @@ export default {
 				.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
 			this.priceTemp = formatted;
-		}
+		},
+		async getUser() {
+			this.user = JSON.parse(localStorage.getItem('user'));
+		},
 	}
 };
 </script>
@@ -226,7 +232,7 @@ export default {
 	position: relative;
 	width: 100%;
 	max-width: 100%;
-	height: 318px;
+	height: 250px;
 	border-radius: 40px;
 	overflow: hidden;
 	border: 2px solid green;
@@ -250,5 +256,10 @@ export default {
 	border-radius: 10px;
 	box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
 	pointer-events: none;
+}
+
+.img-fluid {
+	max-width: 120px;
+	height: 120px;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div class="container d-flex align-items-center justify-content-center min-vh-100 bg-light">
+    <div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
         <div class="card shadow-sm p-4" style="max-width: 400px; width: 100%;">
             <div class="text-center mb-4">
                 <img src="@/assets/logo.png" alt="Logo" style="height: 80px;" />
