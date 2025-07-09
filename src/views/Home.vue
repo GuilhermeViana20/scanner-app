@@ -9,8 +9,7 @@
         <div class="section-action container">
             <div class="row align-items-center g-0">
                 <div class="col-auto">
-                    <button class="btn btn-light btn-rounded p-4 height-fixed" data-bs-toggle="modal"
-                        data-bs-target="#addCartModal">
+                    <button class="btn btn-light btn-rounded p-4 height-fixed" data-bs-toggle="modal" data-bs-target="#addCartModal">
                         <img src="@/assets/icons/plus.png" alt="">
                     </button>
                 </div>
