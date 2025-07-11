@@ -20,6 +20,14 @@
                     {{ loading ? 'Entrando...' : 'Entrar' }}
                 </button>
             </form>
+
+            <div class="form-check mt-3">
+                <input class="form-check-input" type="checkbox" value="" id="checkDefault">
+                <label class="form-check-label" for="checkDefault">
+                    Manter conectado
+                </label>
+            </div>
+
             <div class="text-center mt-3">
                 <p>
                     Não possui uma conta?

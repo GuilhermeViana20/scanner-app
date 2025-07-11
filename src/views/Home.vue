@@ -23,7 +23,7 @@
                         <div class="mt-auto">
                             <div class="fw-bold">{{ cartActive.store_name ?? 'Nenhum carrinho ativo' }}</div>
                             <div class="text-white font-small fw-bold">
-                                {{ cartActive.quantity_term }} | {{ cartActive.total }}
+                                {{ cartActive.quantity_term ?? '0 produtos' }} | {{ cartActive.total ?? 'R$ 0,00' }}
                             </div>
                         </div>
                     </button>
@@ -74,23 +74,27 @@
                 </li>
             </ul>
         </nav>
+
+        <Toast v-if="showToast" :message="toastMessage" :type="type" @close="showToast = false" />
     </div>
 </template>
 
 <script>
 import Navbar from '../components/Navbar.vue';
 import Purchases from '../components/Purchases.vue';
+import Toast from '../components/Toast.vue';
 import api from '../services/axios';
 
 export default {
     name: 'Home',
     components: {
         Navbar,
-        Purchases
+        Purchases,
+        Toast
     },
     data() {
         return {
-            cartActive: [],
+            cartActive: {},
             carts: [],
             meta: {
                 total: 0,
@@ -99,7 +103,10 @@ export default {
                 last_page: 1
             },
             titleCart: '',
-            user: []
+            user: [],
+            type: 'warning',
+            toastMessage: '',
+            showToast: false
         }
     },
     methods: {
@@ -114,7 +121,8 @@ export default {
         },
         goToActiveCart() {
             if (!this.cartActive || Object.keys(this.cartActive).length === 0) {
-                alert('Nenhum carrinho ativo encontrado.');
+                this.toastMessage = 'Nenhum carrinho ativo encontrado.';
+                this.showToast = true;
                 return;
             }
             this.$router.push('/active');

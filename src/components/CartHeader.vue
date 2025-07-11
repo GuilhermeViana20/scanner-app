@@ -18,7 +18,7 @@ export default {
     props: {
         store_name: {
             type: String,
-            required: true,
+            required: false,
         },
     },
 };
